@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barrel Duel - Lucha de Gorilas</title>
+    <meta name="description" content="Juega al clásico duelo de gorilas en este emocionante juego multijugador">
+    <style>
+        /* Reset y estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #32363a;
+            color: white;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #39434d;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #e74c3c;
+            border-radius: 10px;
+        }
+
+        .titulo-juego {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            color: #f1c40f;
+            text-shadow: 2px 2px 0 #c0392b;
+        }
+
+        .subtitulo {
+            font-size: 1.1rem;
+            color: #ecf0f1;
+        }
+
+        .tablero-puntajes {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .jugador {
+            flex: 1;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .jugador-1 {
+            border-color: #3498db;
+        }
+
+        .jugador-2 {
+            border-color: #e74c3c;
+        }
+
+        .avatar-jugador {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background: #7f8c8d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .jugador-1 .avatar-jugador {
+            background: #3498db;
+        }
+
+        .jugador-2 .avatar-jugador {
+            background: #e74c3c;
+        }
+
+        .barra-vida {
+            background: #7f8c8d;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .vida-restante {
+            height: 100%;
+            background: #2ecc71;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .area-juego {
+            background: #2c3e50;
+            height: 300px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #7f8c8d;
+        }
+
+        .plataforma {
+            position: absolute;
+            background: #8B4513;
+            border-radius: 5px;
+        }
+
+        .plataforma-inferior-izq {
+            left: 50px;
+            bottom: 50px;
+            width: 150px;
+            height: 20px;
+        }
+
+        .plataforma-inferior-der {
+            right: 50px;
+            bottom: 50px;
+            width: 150px;
+            height: 20px;
+        }
+
+        .plataforma-superior {
+            left: 50%;
+            top: 80px;
+            width: 200px;
+            height: 20px;
+            transform: translateX(-50%);
+        }
+
+        .controles-juego {
+            text-align: center;
+        }
+
+        .boton-primario {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .boton-primario:hover {
+            background: #229954;
+        }
+
+        .instrucciones-rapidas {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .instrucciones-rapidas h3 {
+            color: #f1c40f;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .lista-controles {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .lista-controles li {
+            background: #34495e;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #7f8c8d;
+        }
+
+        kbd {
+            background: #2c3e50;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #7f8c8d;
+            font-family: monospace;
+        }
+
+        .modales-juego {
+            display: none; /* Ocultar por defecto */
+        }
+
+        dialog {
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            background: #34495e;
+            color: white;
+        }
+
+        .acciones-modal {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .boton-secundario {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        .enlaces-footer a {
+            color: #f1c40f;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        .enlaces-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .tablero-puntajes {
+                flex-direction: column;
+            }
+            
+            .titulo-juego {
+                font-size: 2rem;
+            }
+            
+            .area-juego {
+                height: 250px;
+            }
+            
+            .lista-controles {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="contenedor-principal">
+        <header class="cabecera-juego">
+            <h1 class="titulo-juego">Barrel Duel</h1>
+            <p class="subtitulo">La batalla definitiva de gorilas</p>
+        </header>
+
+        <section class="tablero-puntajes">
+            <article class="jugador jugador-1">
+                <div class="avatar-jugador">
+                    <div class="circulo-avatar">🦍</div>
+                </div>
+                <h2>Gorila Azul</h2>
+                <p class="estado-jugador">Esperando jugador...</p>
+                <div class="barra-vida">
+                    <div class="vida-restante" style="width: 100%"></div>
+                </div>
+            </article>
+
+            <article class="marcador-central">
+                <div class="contador-tiempo">01:30</div>
+                <div class="ronda-actual">Ronda 1</div>
+            </article>
+
+            <article class="jugador jugador-2">
+                <div class="avatar-jugador">
+                    <div class="circulo-avatar">🦍</div>
+                </div>
+                <h2>Gorila Rojo</h2>
+                <p class="estado-jugador">Esperando jugador...</p>
+                <div class="barra-vida">
+                    <div class="vida-restante" style="width: 100%"></div>
+                </div>
+            </article>
+        </section>
+
+        <section class="area-juego">
+            <div class="escenario-jungla">
+                <div class="plataforma plataforma-inferior-izq"></div>
+                <div class="plataforma plataforma-inferior-der"></div>
+                <div class="plataforma plataforma-superior"></div>
+            </div>
+        </section>
+
+        <section class="controles-juego">
+            <button class="boton-primario" id="btn-iniciar">
+                <span class="icono-play">▶</span>
+                <span>Iniciar Partida</span>
+            </button>
+            
+            <div class="instrucciones-rapidas">
+                <h3>¿Cómo jugar?</h3>
+                <ul class="lista-controles">
+                    <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> + <kbd>F</kbd> - Disparar (Jugador 1)</li>
+                    <li><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> + <kbd>M</kbd> - Disparar (Jugador 2)</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="modales-juego">
+            <dialog id="modal-resultado">
+                <h2 class="titulo-modal">¡Batalla finalizada!</h2>
+                <p class="mensaje-resultado">El gorila azul ha ganado la partida</p>
+                <div class="acciones-modal">
+                    <button class="boton-secundario">Ver estadísticas</button>
+                    <button class="boton-primario">Revancha</button>
+                </div>
+            </dialog>
+        </div>
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="enlaces-footer">
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+</body>
+</html>
