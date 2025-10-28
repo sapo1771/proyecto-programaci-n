@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barrel Duel - Lucha de Gorilas</title>
-    <meta name="description" content="Juega al clásico duelo de gorilas en este emocionante juego multijugador">
+    <title>Barrel Duel - dos gorilas, solo un rey</title>
+    <meta name="description" content="Juega como un gorila en esta emocionante aventura de un solo jugador con niveles desafiantes">
     <style>
-        /* Reset y estilos base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    * {
+        padding: 0;
+        box-sizing: border-box;
+    }
+        h1{
+            font-family: fantasy;
+            color: greenyellow;
         }
-
+        p{
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            text-shadow: #ffffff 1px 1px 1px;
+        }
         body {
             font-family: 'Arial', sans-serif;
-            background: #32363a;
+            background: #f3ba00b7;
             color: white;
             padding: 20px;
             line-height: 1.6;
         }
-
+        
         main {
             max-width: 800px;
             margin: 0 auto;
@@ -34,20 +41,20 @@
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
-            background: #e74c3c;
-            border-radius: 10px;
+            background: #ffbb01;
+            border-radius:15px;
         }
 
         .titulo-juego {
             font-size: 2.5rem;
             margin-bottom: 5px;
-            color: #f1c40f;
-            text-shadow: 2px 2px 0 #c0392b;
+            color: #ff0000;
+            text-shadow: 2px 2px 0 #ffffff;
         }
 
         .subtitulo {
             font-size: 1.1rem;
-            color: #ecf0f1;
+            color: #ff0000;
         }
 
         .tablero-puntajes {
@@ -111,13 +118,31 @@
         }
 
         .area-juego {
-            background: #2c3e50;
+            background: #aaa895;
             height: 300px;
-            border-radius: 10px;
+            border-radius: 20px;
             margin-bottom: 25px;
             position: relative;
             overflow: hidden;
-            border: 3px solid #7f8c8d;
+            border: 3px solid #ffee00;
+        }
+
+        .gorila {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            transition: left 0.1s, top 0.1s;
+        }
+
+        .enemigo {
+            background: #e74c3c;
         }
 
         .plataforma {
@@ -169,7 +194,7 @@
         }
 
         .instrucciones-rapidas {
-            background: #2c3e50;
+            background: #696969;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
@@ -190,10 +215,10 @@
         }
 
         .lista-controles li {
-            background: #34495e;
+            background: #ffd000;
             padding: 10px 15px;
-            border-radius: 6px;
-            border: 1px solid #7f8c8d;
+          
+            border: 1px solid #8d7f7f;
         }
 
         kbd {
@@ -205,7 +230,7 @@
         }
 
         .modales-juego {
-            display: none; /* Ocultar por defecto */
+            display: none; 
         }
 
         dialog {
@@ -272,7 +297,7 @@
     <main class="contenedor-principal">
         <header class="cabecera-juego">
             <h1 class="titulo-juego">Barrel Duel</h1>
-            <p class="subtitulo">La batalla definitiva de gorilas</p>
+            <p class="subtitulo">dos gorilas, un solo rey de la selva</p>
         </header>
 
         <section class="tablero-puntajes">
@@ -281,7 +306,7 @@
                     <div class="circulo-avatar">🦍</div>
                 </div>
                 <h2>Gorila Azul</h2>
-                <p class="estado-jugador">Esperando jugador...</p>
+                <p class="estado-jugador">Listo para jugar</p>
                 <div class="barra-vida">
                     <div class="vida-restante" style="width: 100%"></div>
                 </div>
@@ -289,15 +314,15 @@
 
             <article class="marcador-central">
                 <div class="contador-tiempo">01:30</div>
-                <div class="ronda-actual">Ronda 1</div>
+                <div class="nivel-actual">Nivel 1</div>
             </article>
 
             <article class="jugador jugador-2">
                 <div class="avatar-jugador">
                     <div class="circulo-avatar">🦍</div>
                 </div>
-                <h2>Gorila Rojo</h2>
-                <p class="estado-jugador">Esperando jugador...</p>
+                <h2>Enemigo</h2>
+                <p class="estado-jugador">Esperando...</p>
                 <div class="barra-vida">
                     <div class="vida-restante" style="width: 100%"></div>
                 </div>
@@ -306,6 +331,8 @@
 
         <section class="area-juego">
             <div class="escenario-jungla">
+                <div class="gorila" id="jugador" style="left: 100px; top: 200px;">🦍</div>
+                <div class="gorila enemigo" id="enemigo" style="left: 650px; top: 200px;">🦍</div>
                 <div class="plataforma plataforma-inferior-izq"></div>
                 <div class="plataforma plataforma-inferior-der"></div>
                 <div class="plataforma plataforma-superior"></div>
@@ -315,34 +342,258 @@
         <section class="controles-juego">
             <button class="boton-primario" id="btn-iniciar">
                 <span class="icono-play">▶</span>
-                <span>Iniciar Partida</span>
+                <span>Iniciar Nivel</span>
             </button>
             
             <div class="instrucciones-rapidas">
                 <h3>¿Cómo jugar?</h3>
                 <ul class="lista-controles">
-                    <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> + <kbd>F</kbd> - Disparar (Jugador 1)</li>
-                    <li><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> + <kbd>M</kbd> - Disparar (Jugador 2)</li>
+                    <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> - Moverse</li>
+                    <li><kbd>F</kbd> - Disparar barril</li>
                 </ul>
             </div>
         </section>
 
         <div class="modales-juego">
             <dialog id="modal-resultado">
-                <h2 class="titulo-modal">¡Batalla finalizada!</h2>
-                <p class="mensaje-resultado">El gorila azul ha ganado la partida</p>
+                <h2 class="titulo-modal">¡Nivel completado!</h2>
+                <p class="mensaje-resultado">Has derrotado al enemigo. ¿Continuar al siguiente nivel?</p>
                 <div class="acciones-modal">
                     <button class="boton-secundario">Ver estadísticas</button>
-                    <button class="boton-primario">Revancha</button>
+                    <button class="boton-primario">Siguiente Nivel</button>
+                </div>
+            </dialog>
+            <dialog id="modal-derrota">
+                <h2 class="titulo-modal">¡Derrota!</h2>
+                <p class="mensaje-resultado">El enemigo te ha derrotado. ¿Intentar de nuevo?</p>
+                <div class="acciones-modal">
+                    <button class="boton-secundario">Ver estadísticas</button>
+                    <button class="boton-primario">Reiniciar Nivel</button>
                 </div>
             </dialog>
         </div>
     </main>
+    <script>
+        
+let vidaJugador = 100;
+let vidaEnemigo = 100;
+let tiempo = 90; 
+let juegoActivo = false;
+let intervaloTiempo;
+let nivelActual = 1;
+let intervaloEnemigo;
 
-    <footer class="pie-pagina">
-        <div class="enlaces-footer">
-            <a href="#">Contacto</a>
-        </div>
-    </footer>
+const barraVidaJugador = document.querySelector(".jugador-1 .vida-restante");
+const barraVidaEnemigo = document.querySelector(".jugador-2 .vida-restante");
+const estadoJugador = document.querySelector(".jugador-1 .estado-jugador");
+const estadoEnemigo = document.querySelector(".jugador-2 .estado-jugador");
+const tiempoElemento = document.querySelector(".contador-tiempo");
+const nivelElemento = document.querySelector(".nivel-actual");
+const btnIniciar = document.getElementById("btn-iniciar");
+const modalVictoria = document.getElementById("modal-resultado");
+const modalDerrota = document.getElementById("modal-derrota");
+const mensajeModalVictoria = modalVictoria.querySelector(".mensaje-resultado");
+const mensajeModalDerrota = modalDerrota.querySelector(".mensaje-resultado");
+const btnSiguiente = modalVictoria.querySelector(".boton-primario");
+const btnReiniciar = modalDerrota.querySelector(".boton-primario");
+const btnEstadisticasVictoria = modalVictoria.querySelector(".boton-secundario");
+const btnEstadisticasDerrota = modalDerrota.querySelector(".boton-secundario");
+
+const jugador = document.getElementById("jugador");
+const enemigo = document.getElementById("enemigo");
+
+let posJugadorX = 100;
+let posJugadorY = 200;
+let posEnemigoX = 650;
+let posEnemigoY = 200;
+
+function actualizarVida() {
+  barraVidaJugador.style.width = vidaJugador + "%";
+  barraVidaEnemigo.style.width = vidaEnemigo + "%";
+
+  estadoJugador.textContent = vidaJugador > 0 ? "En combate" : "Derrotado";
+  estadoEnemigo.textContent = vidaEnemigo > 0 ? "En combate" : "Derrotado";
+}
+
+function actualizarTiempo() {
+  let min = Math.floor(tiempo / 60);
+  let seg = tiempo % 60;
+  tiempoElemento.textContent = `${min.toString().padStart(2, "0")}:${seg.toString().padStart(2, "0")}`;
+}
+
+function moverJugador(dx, dy) {
+  posJugadorX += dx;
+  posJugadorY += dy;
+  
+  if (posJugadorX < 0) posJugadorX = 0;
+  if (posJugadorX > 750) posJugadorX = 750;
+  if (posJugadorY < 0) posJugadorY = 0;
+  if (posJugadorY > 250) posJugadorY = 250;
+  jugador.style.left = posJugadorX + "px";
+  jugador.style.top = posJugadorY + "px";
+}
+
+function moverEnemigo(dx, dy) {
+  posEnemigoX += dx;
+  posEnemigoY += dy;
+  
+  if (posEnemigoX < 0) posEnemigoX = 0;
+  if (posEnemigoX > 750) posEnemigoX = 750;
+  if (posEnemigoY < 0) posEnemigoY = 0;
+  if (posEnemigoY > 250) posEnemigoY = 250;
+  enemigo.style.left = posEnemigoX + "px";
+  enemigo.style.top = posEnemigoY + "px";
+}
+
+function calcularDistancia() {
+  let dx = posJugadorX - posEnemigoX;
+  let dy = posJugadorY - posEnemigoY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function comportamientoEnemigo() {
+  if (!juegoActivo || vidaJugador <= 0 || vidaEnemigo <= 0) return;
+
+   
+  let dx = 0;
+  let dy = 0;
+  let distancia = calcularDistancia();
+
+  if (distancia > 200) {
+
+    dx = posJugadorX > posEnemigoX ? 5 : -5;
+    dy = posJugadorY > posEnemigoY ? 5 : -5;
+  } else if (distancia < 100) {
+    
+    dx = posJugadorX < posEnemigoX ? 5 : -5;
+    dy = posJugadorY < posEnemigoY ? 5 : -5;
+  } else {
+    
+    dx = (Math.random() - 0.5) * 10;
+    dy = (Math.random() - 0.5) * 10;
+  }
+
+  moverEnemigo(dx, dy);
+
+  
+  if (distancia < 300 && Math.random() < 0.4) {
+    dispararEnemigo();
+  }
+}
+
+function dispararEnemigo() {
+  if (!juegoActivo || vidaJugador <= 0) return;
+  vidaJugador -= 10;
+  if (vidaJugador < 0) vidaJugador = 0;
+  actualizarVida();
+  if (vidaJugador === 0) finalizarJuego(false);
+}
+
+function finalizarJuego(victoria) {
+  juegoActivo = false;
+  clearInterval(intervaloTiempo);
+  clearInterval(intervaloEnemigo);
+
+  if (victoria) {
+    mensajeModalVictoria.textContent = `¡Has completado el Nivel ${nivelActual}! ¿Continuar al siguiente nivel?`;
+    modalVictoria.showModal();
+  } else {
+    mensajeModalDerrota.textContent = `Derrota en el Nivel ${nivelActual}. ¿Intentar de nuevo?`;
+    modalDerrota.showModal();
+  }
+}
+
+function iniciarNivel() {
+  vidaJugador = 100;
+  vidaEnemigo = 100 + (nivelActual - 1) * 20;
+  tiempo = 90;
+  juegoActivo = true;
+  actualizarVida();
+  actualizarTiempo();
+  nivelElemento.textContent = `Nivel ${nivelActual}`;
+  modalVictoria.close();
+  modalDerrota.close();
+
+  intervaloTiempo = setInterval(() => {
+    if (!juegoActivo) return;
+    tiempo--;
+    actualizarTiempo();
+    if (tiempo <= 0) {
+      finalizarJuego(false);
+    }
+  }, 1000);
+
+ 
+  intervaloEnemigo = setInterval(comportamientoEnemigo, 500);
+}
+
+function siguienteNivel() {
+  nivelActual++;
+  iniciarNivel();
+}
+
+function reiniciarNivel() {
+  iniciarNivel();
+}
+
+window.addEventListener("keydown", (e) => {
+  if (!juegoActivo) return;
+
+  const tecla = e.key.toLowerCase();
+  const velocidad = 10;
+
+  if (tecla === "w") moverJugador(0, -velocidad);
+  if (tecla === "s") moverJugador(0, velocidad);
+  if (tecla === "a") moverJugador(-velocidad, 0);
+  if (tecla === "d") moverJugador(velocidad, 0);
+  if (tecla === "f") dispararJugador();
+});
+
+function dispararJugador() {
+  if (!juegoActivo || vidaEnemigo <= 0) return;
+  const danio = Math.floor(15 + Math.random() * 11); 
+  vidaEnemigo -= danio;
+  if (vidaEnemigo < 0) vidaEnemigo = 0;
+  actualizarVida();
+  if (vidaEnemigo === 0) finalizarJuego(true);
+}
+
+
+btnIniciar.addEventListener("click", () => {
+  iniciarNivel();
+});
+
+btnSiguiente.addEventListener("click", () => {
+  if (modalVictoria.open) modalVictoria.close();
+  siguienteNivel();
+});
+
+btnReiniciar.addEventListener("click", () => {
+  if (modalDerrota.open) modalDerrota.close();
+  reiniciarNivel();
+});
+
+btnEstadisticasVictoria.addEventListener("click", () => {
+  alert(`Estadísticas del Nivel ${nivelActual}:\nVida Jugador: ${vidaJugador}\nVida Enemigo: ${vidaEnemigo}`);
+});
+
+btnEstadisticasDerrota.addEventListener("click", () => {
+  alert(`Estadísticas del Nivel ${nivelActual}:\nVida Jugador: ${vidaJugador}\nVida Enemigo: ${vidaEnemigo}`);
+});
+
+
+modalVictoria.addEventListener("click", (e) => {
+  const rect = modalVictoria.getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+    modalVictoria.close();
+  }
+});
+modalDerrota.addEventListener("click", (e) => {
+  const rect = modalDerrota.getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+    modalDerrota.close();
+  }
+});
+</script>
 </body>
 </html>
